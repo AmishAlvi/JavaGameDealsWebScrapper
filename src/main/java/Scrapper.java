@@ -18,7 +18,13 @@ public class Scrapper {
 
             System.out.printf("Title: %s", doc.title());
 
-            Elements repos = doc.getElementsByClass("hit-card faux-block-link card");
+            Elements repos = doc.getElementsByClass("col-12");
+
+            if(repos.isEmpty())
+            {
+                System.out.println("ıs empter");
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
