@@ -21,9 +21,9 @@ public class Scrapper {
 
     public static void main(String[] args) throws IOException {
 
-        FanaticalScrapper fs = new FanaticalScrapper();
+        HumbleScrapper fs = new HumbleScrapper();
 
-        fs.Scrape(21);
+        fs.Scrape(1);
 
     }
 }

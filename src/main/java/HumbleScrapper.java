@@ -7,20 +7,18 @@ import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.javascript.SilentJavaScriptErrorListener;
-import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLDivElement;
-import org.w3c.dom.html.HTMLElement;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-public class FanaticalScrapper {
+public class HumbleScrapper {
 
-    private static final String baseURL = "https://www.fanatical.com/en/on-sale?onSale=true";
+    private static final String baseURL = "https://www.humblebundle.com/store/search?sort=discount&filter=onsale";
     WebClient client = new WebClient(BrowserVersion.FIREFOX_60); //creating web client using firefox as base browser
-    FileWriter file = new FileWriter("fanatical_deals.json");
+    FileWriter file = new FileWriter("humble_bundle_deals.json");
 
-    public FanaticalScrapper() throws IOException {
+    public HumbleScrapper() throws IOException {
     }
 
 
@@ -30,15 +28,22 @@ public class FanaticalScrapper {
         client.getOptions().setThrowExceptionOnScriptError(false);
         client.setJavaScriptErrorListener(new SilentJavaScriptErrorListener());
         client.setCssErrorHandler(new SilentCssErrorHandler());
+        client.waitForBackgroundJavaScript(10_000);
 
-        for (int i = 0; i < LastPage; i++)
+
+        client.waitForBackgroundJavaScriptStartingBefore(10_000);
+        HtmlPage page = client.getPage(baseURL);
+
+        System.out.println(page.asXml());
+
+        /*for (int i = 0; i < LastPage; i++)
         {
             System.out.println(baseURL + "&page=" + (i+1));  // iterating over each page of the fanatical listings
             try {
-                HtmlPage page = client.getPage(baseURL + "&page=" + (i+1));
+                HtmlPage page = client.getPage(baseURL + "&page=" + i);
                 client.waitForBackgroundJavaScript(10_000);
 
-                List<HtmlElement> items = page.getByXPath("//div[@class='hit-card faux-block-link card']") ; //making a list of all items under the given Xpath node in order to traverse later
+                List<HtmlElement> items = page.getByXPath("//div[@class='entity js-entity on-sale']") ; //making a list of all items under the given Xpath node in order to traverse later
                 if(items.isEmpty())
                 {
                     System.out.println("No items found !");
@@ -47,10 +52,10 @@ public class FanaticalScrapper {
 
                     for(HtmlElement item : items)
                     {
-                        HtmlAnchor itemAnchor = item.getFirstByXPath(".//a[@class='d-flex btn btn-primary']"); // selecting all anchor items with the given class XPath
-                        HtmlElement spanPrice = item.getFirstByXPath(".//span[@class='card-price price']");
-                        HtmlElement itemName = item.getFirstByXPath(".//a[@class='faux-block-link__overlay-link']");
-                        HtmlDivision divSale = item.getFirstByXPath(".//div[@class='card-saving saving-background']");
+                        HtmlAnchor itemAnchor = item.getFirstByXPath(".//a[@class='entity-link js-entity-link']"); // selecting all anchor items with the given class XPath
+                        HtmlElement spanPrice = item.getFirstByXPath(".//span[@class='price']");
+                        HtmlElement itemName = item.getFirstByXPath(".//span[@class='entity-title']");
+                        HtmlDivision divSale = item.getFirstByXPath(".//div[@class='js-discount-amount discount-amount']");
 
                         String itemURL = itemAnchor.getHrefAttribute();
                         String listingName = itemName == null ? "No Name" : itemName.asText();
@@ -62,8 +67,8 @@ public class FanaticalScrapper {
 
                         gameListingItem.setTitle(listingName);
                         gameListingItem.setPrice(itemPrice);
-                        gameListingItem.setUrl("https://www.fanatical.com" + itemURL + "?ref=twinkietalks");
-                        gameListingItem.setSite("fanatical");
+                        gameListingItem.setUrl("https://www.humblebundle.com" + itemURL + "?partner=twinkietalks");
+                        gameListingItem.setSite("humble");
                         gameListingItem.setSale(itemSale);
 
                         ObjectMapper mapper = new ObjectMapper();  //new json object mapper
@@ -79,7 +84,7 @@ public class FanaticalScrapper {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         file.close();
 
