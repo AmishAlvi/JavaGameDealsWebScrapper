@@ -2,8 +2,6 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.WebConnectionWrapper;
 import org.jsoup.Jsoup;
@@ -35,32 +33,9 @@ public class Scrapper {
             }
         };
 
-        HtmlPage page = client.getPage(baseURL);
+        client.getPage(baseURL);
         client.waitForBackgroundJavaScript(10_000);
-        //list.forEach(System.out::println);
-
-        //System.out.println(page.asXml());
-
-        //List<HtmlElement> items = page.getByXPath("//div[@class='hit-card faux-block-link card']") ;
-        List<HtmlAnchor> anchors = page.getByXPath("//a[@class='d-flex btn btn-primary']");
-        if(anchors.isEmpty()){
-            System.out.println("No items found !");
-        }else{
-            for(HtmlAnchor item : anchors){
-                System.out.println(item.getTagName());
-                //HtmlAnchor itemAnchor = ((HtmlAnchor) item.getByXPath("//a[@class='d-flex btn btn-primary']"));
-
-                HtmlElement spanPrice =  item.getFirstByXPath("//span[@class='card-price price']") ;
-
-                String itemName = item.asText();
-                String itemUrl =  item.getHrefAttribute();
-
-                // It is possible that an item doesn't have any price
-                String itemPrice = spanPrice == null ? "0.0" : spanPrice.asText() ;
-
-                System.out.println( String.format("Name : $ %s Url : %s Price : %s", itemName, itemPrice, itemUrl));
-            }
-        }
+        list.forEach(System.out::println);
 
 
 
