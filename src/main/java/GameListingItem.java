@@ -1,9 +1,27 @@
 import java.math.BigDecimal;
 
-public class Item {
+public class GameListingItem {
     private String title;
     private String price;
     private String url;
+    private String site;
+    private String sale;
+
+    public String getSale() {
+        return sale;
+    }
+
+    public void setSale(String sale) {
+        this.sale = sale;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
+    }
 
     public String getTitle() {
         return title;

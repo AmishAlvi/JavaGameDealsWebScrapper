@@ -19,49 +19,11 @@ public class Scrapper {
 
     private static final String baseURL = "https://www.fanatical.com/en/on-sale?onSale=true";  // URL to scrap from
 
-
     public static void main(String[] args) throws IOException {
-        WebClient client = new WebClient(BrowserVersion.FIREFOX_60); //creating web client using firefox as base browser
-        client.getOptions().setCssEnabled(false); // disabling CSS and CSS related scripts from loading
-        client.getOptions().setThrowExceptionOnScriptError(false);
 
-        //Opening Page and waiting for javascript to execute to start scrapping
-        HtmlPage page = client.getPage(baseURL);
-        client.waitForBackgroundJavaScript(10_000);
+        FanaticalScrapper fs = new FanaticalScrapper();
 
-
-        List<HtmlElement> items = page.getByXPath("//div[@class='hit-card faux-block-link card']") ; //making a list of all items under the given Xpath node in order to traverse later
-        if(items.isEmpty())
-        {
-            System.out.println("No items found !");
-        }
-        else {
-
-            for(HtmlElement item : items)
-            {
-                HtmlAnchor itemAnchor = item.getFirstByXPath(".//a[@class='d-flex btn btn-primary']"); // selecting all anchor items with the given class XPath
-                HtmlElement spanPrice = item.getFirstByXPath(".//span[@class='card-price price']");
-                HtmlElement itemName = item.getFirstByXPath(".//a[@class='faux-block-link__overlay-link']");
-
-                String itemURL = itemAnchor.getHrefAttribute();
-                String listingName = itemName == null ? "No Name" : itemName.asText();
-                String itemPrice = spanPrice == null ? "0.0" : spanPrice.asText();
-
-                Item item1 = new Item();
-
-                item1.setTitle(listingName);
-                item1.setPrice(itemPrice);
-                item1.setUrl(itemURL);
-
-                ObjectMapper mapper = new ObjectMapper();  //new json object mapper
-                String jsonString = mapper.writeValueAsString(item1); // mapping all items as json values
-
-                System.out.println(jsonString);
-            }
-
-        }
-
-
+        fs.Scrape(21);
 
     }
 }
