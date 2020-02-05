@@ -41,23 +41,24 @@ public class Scrapper {
 
         //System.out.println(page.asXml());
 
-        List<HtmlElement> items = page.getByXPath("//div[@class='hit-card faux-block-link card']") ;
-        if(items.isEmpty()){
+        //List<HtmlElement> items = page.getByXPath("//div[@class='hit-card faux-block-link card']") ;
+        List<HtmlAnchor> anchors = page.getByXPath("//a[@class='d-flex btn btn-primary']");
+        if(anchors.isEmpty()){
             System.out.println("No items found !");
         }else{
-            for(HtmlElement item : items){
+            for(HtmlAnchor item : anchors){
                 System.out.println(item.getTagName());
-                HtmlAnchor itemAnchor = ((HtmlAnchor) item.getFirstByXPath("//a[@class='d-flex btn btn-primary']"));
+                //HtmlAnchor itemAnchor = ((HtmlAnchor) item.getByXPath("//a[@class='d-flex btn btn-primary']"));
 
-                HtmlElement spanPrice = ((HtmlElement) item.getFirstByXPath("//span[@class='card-price price']")) ;
+                HtmlElement spanPrice =  item.getFirstByXPath("//span[@class='card-price price']") ;
 
-                String itemName = itemAnchor.asText();
-                String itemUrl =  itemAnchor.getHrefAttribute();
+                String itemName = item.asText();
+                String itemUrl =  item.getHrefAttribute();
 
                 // It is possible that an item doesn't have any price
                 String itemPrice = spanPrice == null ? "0.0" : spanPrice.asText() ;
 
-                System.out.println( String.format("Name : %s Url : %s Price : %s", itemName, itemPrice, itemUrl));
+                System.out.println( String.format("Name : $ %s Url : %s Price : %s", itemName, itemPrice, itemUrl));
             }
         }
 
