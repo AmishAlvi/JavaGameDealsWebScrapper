@@ -2,7 +2,11 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlSpan;
+import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLElement;
 import com.gargoylesoftware.htmlunit.util.WebConnectionWrapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,20 +26,32 @@ public class Scrapper {
         client.getOptions().setCssEnabled(false);
         client.getOptions().setThrowExceptionOnScriptError(false);
 
-        final List<String> list = new ArrayList<>();
-
-        new WebConnectionWrapper(client) {
-            @Override
-            public WebResponse getResponse(final WebRequest request) throws IOException {
-                final WebResponse response = super.getResponse(request);
-                list.add(request.getHttpMethod() + " " + request.getUrl());
-                return response;
-            }
-        };
-
-        client.getPage(baseURL);
+        //Opening Page and waiting for javascript to execute to start scrapping
+        HtmlPage page = client.getPage(baseURL);
         client.waitForBackgroundJavaScript(10_000);
-        list.forEach(System.out::println);
+
+
+        List<HtmlElement> items = page.getByXPath("//div[@class='hit-card faux-block-link card']") ;
+        if(items.isEmpty())
+        {
+            System.out.println("No items found !");
+        }
+        else {
+
+            for(HtmlElement item : items)
+            {
+                HtmlAnchor itemAnchor = item.getFirstByXPath(".//a[@class='d-flex btn btn-primary']");
+                HtmlElement spanPrice = item.getFirstByXPath(".//span[@class='card-price price']");
+                HtmlElement itemName = item.getFirstByXPath(".//a[@class='faux-block-link__overlay-link']");
+
+                String itemURL = itemAnchor.getHrefAttribute();
+                String listingName = itemName == null ? "No Name" : itemName.asText();
+                String itemPrice = spanPrice == null ? "0.0" : spanPrice.asText();
+
+                System.out.println(String.format("Name: %s, Price: %s , URL: %s ", listingName, itemPrice, itemURL ));
+            }
+
+        }
 
 
 
