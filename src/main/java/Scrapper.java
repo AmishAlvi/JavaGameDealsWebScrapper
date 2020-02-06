@@ -1,19 +1,5 @@
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebRequest;
-import com.gargoylesoftware.htmlunit.WebResponse;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlSpan;
-import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLElement;
-import com.gargoylesoftware.htmlunit.util.WebConnectionWrapper;
-
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class Scrapper {
 
@@ -22,7 +8,7 @@ public class Scrapper {
     public static void main(String[] args) throws IOException, InterruptedException {
 
 
-        SeleniumScrapper.ScrapeDeals("https://www.fanatical.com/en/on-sale?onSale=true", 1, "//div[@class='hit-card faux-block-link card']", ".//a[@class='d-flex btn btn-primary']", ".//span[@class='card-price price']", ".//div[@class='card-saving saving-background']",".//a[@class='faux-block-link__overlay-link']");
-
+        SeleniumScrapper.ScrapeDeals("fanatical","fanatical_deals.json","https://www.fanatical.com/en/on-sale?onSale=true", 3, "//div[@class='hit-card faux-block-link card']", ".//a[@class='d-flex btn btn-primary']", ".//span[@class='card-price price']", ".//div[@class='card-saving saving-background']",".//a[@class='faux-block-link__overlay-link']" , ".//img[@class='img-fluid img-full img-force-full']");
+       // SeleniumScrapper.ScrapeDeals("humble","humble_deals.json","https://www.humblebundle.com/store/search?sort=discount&filter=onsale",3,"//div[@class='entity js-entity on-sale']",".//a[@class='entity-link js-entity-link']",".//span[@class='price']",".//div[@class='js-discount-amount discount-amount']",".//span[@class='entity-title']" , ".//img[@class='entity-image']"); //Humble Scraper
     }
 }

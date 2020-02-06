@@ -1,11 +1,20 @@
 import java.math.BigDecimal;
 
 public class GameListingItem {
+    private String site;
     private String title;
     private String price;
-    private String url;
-    private String site;
     private String sale;
+    private String url;
+    private String img;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public String getSale() {
         return sale;
