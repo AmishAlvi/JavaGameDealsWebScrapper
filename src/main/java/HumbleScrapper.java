@@ -22,7 +22,7 @@ public class HumbleScrapper {
     }
 
 
-    public void Scrape(int LastPage) throws IOException {
+    public void Scrape(int LastPage) throws IOException, InterruptedException {
 
         client.getOptions().setCssEnabled(false); // disabling CSS and CSS related scripts from loading
         client.getOptions().setThrowExceptionOnScriptError(false);
@@ -33,6 +33,9 @@ public class HumbleScrapper {
 
         client.waitForBackgroundJavaScriptStartingBefore(10_000);
         HtmlPage page = client.getPage(baseURL);
+        synchronized (page) {
+            page.wait(25000);
+        }
 
         System.out.println(page.asXml());
 

@@ -19,11 +19,10 @@ public class Scrapper {
 
     private static final String baseURL = "https://www.fanatical.com/en/on-sale?onSale=true";  // URL to scrap from
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
-        HumbleScrapper fs = new HumbleScrapper();
 
-        fs.Scrape(1);
+        SeleniumScrapper.ScrapeDeals("https://www.fanatical.com/en/on-sale?onSale=true", 1, "//div[@class='hit-card faux-block-link card']", ".//a[@class='d-flex btn btn-primary']", ".//span[@class='card-price price']", ".//div[@class='card-saving saving-background']",".//a[@class='faux-block-link__overlay-link']");
 
     }
 }
