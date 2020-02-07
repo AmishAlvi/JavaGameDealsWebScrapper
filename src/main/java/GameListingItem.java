@@ -8,6 +8,15 @@ public class GameListingItem {
     private String url;
     private String img;
 
+    public GameListingItem(String site, String title, String price, String sale, String url, String img) {
+        this.site = site;
+        this.title = title;
+        this.price = price;
+        this.sale = sale;
+        this.url = url;
+        this.img = img;
+    }
+
     public String getImg() {
         return img;
     }

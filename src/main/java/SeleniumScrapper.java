@@ -9,17 +9,21 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
 
 public class SeleniumScrapper {
 
-    static FirefoxDriver driver = new FirefoxDriver();
-    static WebDriverWait wait = new WebDriverWait(driver, 30);
+    FirefoxDriver driver = new FirefoxDriver();
+    WebDriverWait wait = new WebDriverWait(driver, 30);
 
+    public SeleniumScrapper() throws IOException {
+    }
 
-    public static void ScrapeDeals(String site, String filename, String URL, int last_page, String top_element, String link_element, String price_element, String sale_element, String name_element, String img_element) throws IOException, InterruptedException {
+    public List<GameListingItem> ScrapeDeals(String site, String URL, int last_page, String top_element, String link_element, String price_element, String sale_element, String name_element, String img_element) throws IOException, InterruptedException {
 
-        FileWriter file = new FileWriter(filename);
+        List<GameListingItem> tmp_list = new  ArrayList<GameListingItem>();
 
         for(int i = 0 ; i < last_page; i++)
         {
@@ -46,34 +50,27 @@ public class SeleniumScrapper {
                 wait.until(ExpectedConditions.elementToBeClickable(By.xpath(img_element)));
                 WebElement img_element_scroll = item.findElement(By.xpath(img_element));
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(false);", img_element_scroll);
-                Thread.sleep(500);
                 String itemImg = item.findElement(By.xpath(img_element)).getAttribute("src");
 
 
-                GameListingItem gameListingItem = new GameListingItem();
+                GameListingItem gameListingItem = new GameListingItem(site, itemName, itemPrice, itemSale, itemURL, itemImg);
 
-                gameListingItem.setTitle(itemName);
-                gameListingItem.setSale(itemSale);
-                gameListingItem.setSite(site);
-                gameListingItem.setPrice(itemPrice);
-                gameListingItem.setUrl(itemURL);
-                gameListingItem.setImg(itemImg);
-
-                ObjectMapper mapper = new ObjectMapper();  //new json object mapper
-                String jsonString = mapper.writeValueAsString(gameListingItem); // mapping all items as json values
-
-                file.write(jsonString + "\n");
-
-                System.out.println(jsonString);
+                tmp_list.add(gameListingItem);
 
             }
 
         }
 
-        driver.close();
-        file.close();
+        System.out.println("done parsing all of " + site);
+        return tmp_list;
 
     }
+
+    public void CloseBrowser(){
+        driver.close();
+    }
+
+
 
 
 
