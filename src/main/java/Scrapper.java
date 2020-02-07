@@ -25,6 +25,5 @@ public class Scrapper {
         gson.toJson(final_deals, file);
         file.close();
 
-
     }
 }
